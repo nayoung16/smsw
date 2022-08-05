@@ -4,7 +4,6 @@ from .views import DeleteVolunteer, Search, UploadFeed, Profile, Community, Uplo
 app_name = 'content'
 
 urlpatterns = [
-    # path('main', Main.as_view(), name="community"),
     path('community', Community.as_view(), name="community"),
     path('profile', Profile.as_view(), name="profile"),
     path('search', Search.as_view(), name="search"),
