@@ -1,11 +1,13 @@
 from uuid import uuid4
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Feed, Reply, Like, Bookmark, VolunteerItem
 from user.models import User
 import os
 from Jinstagram.settings import MEDIA_ROOT
+from django.db.models import Q
+from content.models import VolunteerItem
 
 
 class Community(APIView):
@@ -168,10 +170,30 @@ class ToggleBookmark(APIView):
         return Response(status=200)
 
 class Search(APIView):
+    volunteer_list = VolunteerItem.objects.order_by('id')
+
     def get(self, request):
+        global volunteer_list
+        print(volunteer_list)
         email = request.session.get('email', None)
         mainuser = User.objects.filter(email=email).first()
-        return render(request, "content/search.html", context=dict( mainuser=mainuser))
+        print("get")
+        return render(request, "content/search.html", context=dict(mainuser=mainuser,
+                                                                    volunteer_list=volunteer_list))
+
+    def post(self, request):
+        global volunteer_list
+        volunteer_list = VolunteerItem.objects.order_by('id')
+        search_item = request.data.get('search_item', None)  # 검색어
+        volunteer_list = volunteer_list.filter(
+            description__contains=search_item
+        ).distinct()
+        print(volunteer_list)
+        print("post")
+        return render(request, 'content/search.html', context=dict(volunteer_list=volunteer_list))
+    
+
+
 
 class createVolunteerITem(APIView):
     def get(self, request):
@@ -221,3 +243,7 @@ class DeleteVolunteer(APIView):
         volunteeritem = VolunteerItem.objects.filter(id=volunteer_id).first()
         volunteeritem.delete()
         return Response(status=200)
+
+class Main(APIView):
+    def get(self, request):
+        return render(request, "content/main.html")

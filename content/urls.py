@@ -1,14 +1,16 @@
 from django.urls import path
-from .views import DeleteVolunteer, Search, UploadFeed, Profile, Community, UploadReply, ToggleLike, ToggleBookmark, DeleteFeed, createVolunteerITem
+from .views import DeleteVolunteer, Search, UploadFeed, Profile,\
+     Community, UploadReply, ToggleLike, ToggleBookmark, DeleteFeed, createVolunteerITem, \
+        Main
 
 app_name = 'content'
 
 urlpatterns = [
-    # path('main', Main.as_view(), name="community"),
+    path('', Main.as_view(), name="main"),
     path('community', Community.as_view(), name="community"),
     path('profile', Profile.as_view(), name="profile"),
     path('search', Search.as_view(), name="search"),
-    path('search_result', Search.as_view(), name="search_result"),
+    path('search_result',Search.as_view(), name="search_result"),
 
     path('createvolunteer', createVolunteerITem.as_view(), name="create_volunteer"),
     path('deletevolunteer', DeleteVolunteer.as_view()),
