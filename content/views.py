@@ -8,7 +8,9 @@ import os
 from Jinstagram.settings import MEDIA_ROOT
 from django.db.models import Q
 from content.models import VolunteerItem
-
+from django.views.decorators.csrf import csrf_exempt
+from . import config
+import math
 
 class Community(APIView):
     def get(self, request):
@@ -54,6 +56,7 @@ class Community(APIView):
                                 image=volunteer.volunteer_image,
                                 region=volunteer.region,
                                 participant=volunteer.participant,
+                                admin = volunteer.admin
                                 ))
 
 
@@ -99,9 +102,9 @@ class Profile(APIView):
         if email is None:
             return render(request, "user/login.html")
 
-        user = User.objects.filter(email=email).first()
+        mainuser = User.objects.filter(email=email).first()
 
-        if user is None:
+        if mainuser is None:
             return render(request, "user/login.html")
 
         feed_list = Feed.objects.filter(email=email)
@@ -112,7 +115,7 @@ class Profile(APIView):
         return render(request, 'content/profile.html', context=dict(feed_list=feed_list,
                                                                     like_feed_list=like_feed_list,
                                                                     bookmark_feed_list=bookmark_feed_list,
-                                                                    user=user))
+                                                                    mainuser = mainuser))
 
 
 class UploadReply(APIView):
@@ -170,30 +173,37 @@ class ToggleBookmark(APIView):
         return Response(status=200)
 
 class Search(APIView):
-    volunteer_list = VolunteerItem.objects.order_by('id')
-
     def get(self, request):
-        global volunteer_list
-        print(volunteer_list)
         email = request.session.get('email', None)
         mainuser = User.objects.filter(email=email).first()
-        print("get")
-        return render(request, "content/search.html", context=dict(mainuser=mainuser,
-                                                                    volunteer_list=volunteer_list))
 
+        # distance=[]
+
+        # volunteer_list = volunteer_list = VolunteerItem.objects.order_by('id')
+        # for volunteer in volunteer_list:
+            
+
+        return render(request, "content/search.html", context=dict(mainuser=mainuser))   
+
+class SearchResult(APIView):
+    def get(self, request):
+        email = request.session.get('email', None)
+        mainuser = User.objects.filter(email=email).first()
+        volunteer_list = config.volunteer_list
+        return render(request, "content/search.html", context=dict(mainuser=mainuser,
+                                                                    volunteer_list=volunteer_list))   
     def post(self, request):
-        global volunteer_list
+        email = request.session.get('email', None)
+        mainuser = User.objects.filter(email=email).first()
         volunteer_list = VolunteerItem.objects.order_by('id')
-        search_item = request.data.get('search_item', None)  # 검색어
+        search_item = request.data.get('search_item', None)
         volunteer_list = volunteer_list.filter(
             description__contains=search_item
         ).distinct()
-        print(volunteer_list)
         print("post")
-        return render(request, 'content/search.html', context=dict(volunteer_list=volunteer_list))
-    
-
-
+        config.volunteer_list = volunteer_list
+        return render(request, "content/search.html", context=dict(mainuser=mainuser,
+                                                                    volunteer_list=volunteer_list))
 
 class createVolunteerITem(APIView):
     def get(self, request):
@@ -221,19 +231,28 @@ class createVolunteerITem(APIView):
         date = request.data.get('date', None)
         start_time = request.data.get('start_time', None)
         end_time = request.data.get('end_time', None)
-        latlng = request.data.get('latlag', None)
+        admin = request.data.get('admin', None)
+        title = request.data.get('title', None)
+        lat = request.data.get('lat', None)
+        lng = request.data.get('lng', None)
+        email = request.data.get('email', None)
 
-        print(tuple(latlng)[0])
+        admin = User.objects.filter(email=email).first()
+        print(email)
+        print(admin)
 
         VolunteerItem.objects.create(
-                            admin = mainuser,
+                            admin = admin,
                             volunteer_image=image, 
                             region = region,
                             participant = participant,
                             description = description,
                             date = date,
                             start_time = start_time,
-                            end_time = end_time)
+                            end_time = end_time,
+                            title=title,
+                            lat=lat,
+                            lng=lng)
 
         return Response(status=200)
 

@@ -28,6 +28,7 @@ class Bookmark(models.Model):
 
 class VolunteerItem(models.Model):
     admin = models.ForeignKey(User,on_delete = models.CASCADE)
+    title = models.TextField(default='')
     volunteer_image = models.TextField()
     region = models.TextField() 
     participant = models.IntegerField(default = 0)

@@ -12,15 +12,28 @@
     <!-- Jquery -->
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
+    <!--주소 검색 api-->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+     <!-- services 라이브러리 불러오기 -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=73a7bf3da2a6472e3d0ca0cd49ccb6c3&libraries=services"></script>
+
     <title>회원 가입</title>
 </head>
 <body style="background: #FAFAFA">
 <div style="display: flex; flex-direction: column; align-items: center; width: 100%">
-    <div style="padding: 20px ;text-align: center;border: solid 1px rgba(219, 219, 219, 1); width: 300px; height: 400px; margin-top: 30px; background: white">
+    <div style="padding: 20px ;text-align: center;border: solid 1px rgba(219, 219, 219, 1); max-width: 500px; max-height: 1000px; margin-top: 30px; background: white">
         <div style="padding-bottom: 10px"><img style="width: 150px"
-                                               src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png">
+                                            src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png">
         </div>
         <div style="font-weight: bold; color: gray;padding-bottom: 20px"> 친구들의 사진과 동영상을 보려면 가입하세요.</div>
+        <div>
+            <div class="form-floating mb-3">
+                <input type="text" id="sample5_address" placeholder="주소">
+                <input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
+                <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
+            </div>
+        </div>
         <div>
             <div class="form-floating mb-3">
                 <input type="email" class="form-control" style="font-size: 14px; height: 24px" id="input_email" placeholder="name@example.com">
@@ -45,7 +58,24 @@
                 <label for="input_password" style="font-size: 14px;padding: 4px 10px">비밀번호</label>
             </div>
         </div>
-        <button id="join_button"  class="btn btn-primary" style="width: 100%"> 가입</button>
+        <div>
+            <div class="form-floating mb-3">
+                <fieldset>
+                    <div>
+                        <input type="radio" id="admin" name="role" value="Admin" onclick='getRole(event)'>
+                        <label for="huey">봉사 기관 관련 종사자</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="user" name="role" value="User" onclick='getRole(event)'>
+                        <label for="user">봉사자</label>
+                    </div> 
+                    <input style="display:none" id="role"></input>
+                </fieldset>
+            </div>
+        </div>
+        <div>
+            <button id="join_button"  class="btn btn-primary" style="width: 100%"> 가입</button>
+        </div>
     </div>
     <div style="padding: 20px ;text-align: center;border: solid 1px rgba(219, 219, 219, 1); width: 300px; height: 70px; margin-top: 30px; background: white">
         <div> 계정이 있으신가요? <a href="login">로그인</a></div>
@@ -56,14 +86,75 @@
 
 <!-- Optional JavaScript; choose one of the two! -->
 <script>
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+    mapOption = {
+        center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+        level: 5 // 지도의 확대 레벨
+    };
+
+//지도를 미리 생성
+var map = new daum.maps.Map(mapContainer, mapOption);
+//주소-좌표 변환 객체를 생성
+var geocoder = new daum.maps.services.Geocoder();
+//마커를 미리 생성
+var marker = new daum.maps.Marker({
+    position: new daum.maps.LatLng(37.537187, 127.005476),
+    map: map
+});
+
+let lat;
+let lng;
+
+function sample5_execDaumPostcode() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            var addr = data.address; // 최종 주소 변수
+
+            // 주소 정보를 해당 필드에 넣는다.
+            document.getElementById("sample5_address").value = addr;
+            // 주소로 상세 정보를 검색
+            geocoder.addressSearch(data.address, function(results, status) {
+                // 정상적으로 검색이 완료됐으면
+                if (status === daum.maps.services.Status.OK) {
+
+                    var result = results[0]; //첫번째 결과의 값을 활용
+
+                    // 해당 주소에 대한 좌표를 받아서
+                    var coords = new daum.maps.LatLng(result.y, result.x);
+
+                    lat = result.y
+                    lng = result.x
+
+                    // 지도를 보여준다.
+                    mapContainer.style.display = "block";
+                    map.relayout();
+                    // 지도 중심을 변경한다.
+                    map.setCenter(coords);
+                    // 마커를 결과값으로 받은 위치로 옮긴다.
+                    marker.setPosition(coords)
+                }
+            });
+        }
+    }).open();
+}
+
+
+
+    function getRole(event) {
+        document.getElementById('role').value = 
+            event.target.value;
+    }
+
     $('#join_button').click(function () {
 
         let email = $('#input_email').val();
         let password = $('#input_password').val();
         let nickname = $('#input_nickname').val();
         let name = $('#input_name').val();
+        let role = $('#role').val();
+        let residence = $('#sample5_address').val();
 
-        console.log(email, password, nickname, name);
+        alert(residence)
 
         $.ajax({
             url: "/user/join",
@@ -71,7 +162,11 @@
                 email : email,
                 password : password,
                 nickname : nickname,
-                name : name
+                name : name,
+                role: role,
+                residence: residence,
+                lat: lat,
+                lng: lng
             },
             method: "POST",
             success: function (data) {
@@ -88,6 +183,7 @@
             }
         });
     });
+
 </script>
 
 
