@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- Google Icon -->
+    <link
+            href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+            rel="stylesheet">
+    <!-- Jquery -->
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script> 
+    <title>createVolunteerItem</title>
+    <style>
+        .profile {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+   <!-- services 라이브러리 불러오기 -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=73a7bf3da2a6472e3d0ca0cd49ccb6c3&libraries=services"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="position: fixed;width: 100%; z-index:10;">
+    <div class="container-fluid" style="justify-content: space-between;flex-wrap: nowrap; min-width: 1000px">
+        <a class="navbar-brand" href={% url "content:community"%}><img style="width: 100px"
+                                                src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png">
+        </a>
+        <div style="display: flex">
+            <a href={% url "content:community"%} style="color: black">커뮤니티</a>
+            &nbsp;  &nbsp;  &nbsp; 
+            <a href={% url "content:search"%} style="color: black">봉사 검색</a>
+            &nbsp;  &nbsp;  &nbsp; 
+            <a href={% url "content:create_volunteer"%} style="color: black">봉사 추가</a>
+            &nbsp;  &nbsp;  &nbsp; 
+            <span id="nav_bar_add_box" class="material-icons-outlined" style="padding-right: 10px">add_box</span>
+            &nbsp;  &nbsp;  &nbsp; 
+            <div class="dropdown">
+                <a href="#" role="button" id="dropdownMenuLink"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="box" style="width: 40px; height: 40px">
+                        <img class="profile"
+                            src="{% get_media_prefix %}{{ mainuser.profile_image }}">
+                    </div>
+                </a>
+
+                <ul class="dropdown-menu" style="left:-158px" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="/content/profile">프로필</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="/user/logout">로그아웃</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+<div id="map" style="width:500px;height:400px;"></div>
+    <br/><br/><br/>
+    <div>지역 <input id="region" type="text"/><button id="region_find">검색</button></div>
+    <div id="show_result"></div>
+    <br/>
+    <div>사진 <input type="file" class="custom-file-input file" id="file"></div>
+    <br/>
+    <div>인원 <input id="participant" type="number" min="1"/></div>
+    <br/>
+    <div>설명 <textarea id="description" type="text"/></textarea>
+    <br/>
+    <div>날짜 선택 <input id="date" type="date"/></div>
+    <br/>
+    <div>시작 시간 <input id="start_time" type="time"/></div>
+    <br/>
+    <div>종료 시간 <input id="end_time" type="time"/></div>
+    <br/>
+    <div> <button type="submit" id="submit">등록 </button>
+</body>
+</html>
+
+<form>
+<script>
+
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    mapOption = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };  
+
+// 지도를 생성합니다    
+var map = new kakao.maps.Map(mapContainer, mapOption); 
+let latlag;
+
+$('#region_find').click(function(){
+    let keyword = document.getElementById("region").value
+
+    var map = new kakao.maps.Map(mapContainer, mapOption); 
+    // 주소-좌표 변환 객체를 생성합니다
+    var geocoder = new kakao.maps.services.Geocoder();
+    // 주소로 좌표를 검색합니다
+    geocoder.addressSearch( keyword, function map_search(result, status) {
+    // 정상적으로 검색이 완료됐으면 
+        if (status === kakao.maps.services.Status.OK) {
+            var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+            latlag = coords;
+
+            var message = 'latlng: new kakao.maps.LatLng(' + result[0].y + ', ';
+            message += result[0].x + ')';
+            
+            // 결과값으로 받은 위치를 마커로 표시합니다
+            var marker = new kakao.maps.Marker({
+                map: map,
+                position: coords
+            });
+
+            // 인포윈도우로 장소에 대한 설명을 표시합니다
+            var infowindow = new kakao.maps.InfoWindow({
+                content: '<div style="width:150px;text-align:center;padding:6px 0;">장소</div>'
+            });
+            infowindow.open(map, marker);
+
+            // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+            map.setCenter(coords);
+        } 
+    });
+});
+
+$("#submit").click(function user_update() {
+    let file = document.getElementById("file").files[0]
+    let region = document.getElementById("region").value;
+    let participant = document.getElementById("participant").value;
+    let description = document.getElementById("description").value;
+    let date = document.getElementById("date").value;
+    let start_time = document.getElementById("start_time").value;
+    let end_time = document.getElementById("end_time").value;
+
+    let form_data = new FormData()
+
+    form_data.append("file_give", file)
+    form_data.append("region", region)
+    form_data.append("participant", participant)
+    form_data.append("description", description)
+    form_data.append("date", date)
+    form_data.append("start_time", start_time)
+    form_data.append("end_time", end_time)
+    form_data.append("latlag", latlag)
+
+    //사진이 들어가지 않았을 때
+$.ajax({
+        type: "POST",
+        url: "/main/createvolunteer",
+        data: form_data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            alert("성공")
+        },
+    })
+}
+);
+</script>
