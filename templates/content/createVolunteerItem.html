@@ -73,7 +73,7 @@
                 </a>
 
                 <ul class="dropdown-menu" style="left:-158px" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="/content/profile">프로필</a></li>
+                    <li><a class="dropdown-item" href="/main/profile">프로필</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -84,7 +84,7 @@
     </div>
 </nav>
     <br/><br/><br/>
-    <input type="text" id="sample5_address" placeholder="주소">
+    <input type="text" disabled id="sample5_address" placeholder="주소">
     <input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
     <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
     <br/>
@@ -102,7 +102,7 @@
     <br/>
     <div>종료 시간 <input id="end_time" type="time"/></div>
     <br/>
-    <div><input id="user" type="text" value={{mainuser.email}}/></div>
+    <div><input style="display:none" id="user" type="text" value={{mainuser.email}}/></div>
     <div> <button type="submit" id="submit">등록 </button>
 </body>
 </html>
@@ -171,10 +171,8 @@ $("#submit").click(function user_update() {
     let date = document.getElementById("date").value;
     let start_time = document.getElementById("start_time").value;
     let end_time = document.getElementById("end_time").value;
-    let email = document.getElementById("user").value;
+    let email = document.getElementById("user").value.slice(0, -1);
     let title = document.getElementById("title").value;
-
-    alert(email)
 
     let form_data = new FormData()
 
