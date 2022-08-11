@@ -4,22 +4,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>누리봄</title>
     {% load static %}
-     <!-- style CSS -->
-     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
      <!-- Bootstrap CSS -->
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <!-- Google Icon -->
-<link
+    <link
        href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
        rel="stylesheet">
 </head>
 
 <body>
-    <div style="width:100%; height: 120px; background: #FFFFFF; text-align:center;"><br><br>누리봄</div>
-    <div style="width:100%; height: 300px; background-color:#B0FDB3;">    
+    <h3 style="width:100%; height: auto; background: #FFFFFF; text-align:center;padding:50px;margin:0">누리봄</h3>
+    <div style="width:100%; height: auto; background-color:#B0FDB3;padding:100px">    
         <table width="100%">
             <tr> 
                 <td align="center" onClick="location.href='{% url "content:profile"%}'">
@@ -34,13 +32,14 @@
             </tr>
 
             <tr>
-                <td align="center" onClick="location.href='{% url "content:profile"%}'">My page</td>
-                <td align="center" onClick="location.href='{% url "content:search"%}'">Search</td>
-                <td align="center" onClick="location.href='{% url "content:community"%}'">Community</td>
+                <td align="center" onClick="location.href='{% url "content:profile"%}'"><span role="button">My page</span></td>
+                <td align="center" onClick="location.href='{% url "content:search"%}'"><span role="button">Search</span></td>
+                <td align="center" onClick="location.href='{% url "content:community"%}'"><span role="button">Community</span></td>
             </tr>
         </table>
     </div>
-    <div style="width:100%; height: 300px; background-color:#D9D9D9;text-align:center;">오늘의 봉사 지식<br>
+    <div style="width:100%; height: 300px; background-color:#D9D9D9;text-align:center;padding:30px;">
+        오늘의 봉사 지식
     </div>
     
 
