@@ -83,9 +83,11 @@
     <input id="searchbox" style="width:700px; height: 50px;" type="search" ></input>
     <button id="search_button" style="width:50px; height: 50px;">검색</button>
     {%if volunteer_list%}
-        {% for a in volunteer_list %}
-            <div>{{a.region}}</div>
-            <div>{{a.description}}</div>
+        {%for item in volunteer_list%}
+            {% for a in item %}
+                <div>{{a.region}}</div>
+                <div>{{a.description}}</div>
+            {% endfor %}
         {% endfor %}
     {%endif%}
 

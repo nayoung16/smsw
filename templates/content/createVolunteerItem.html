@@ -102,6 +102,8 @@
     <br/>
     <div>종료 시간 <input id="end_time" type="time"/></div>
     <br/>
+    <div>봉사 인정 시간 <input id="admit_time" type="number"/></div>
+    <br/>
     <div><input style="display:none" id="user" type="text" value={{mainuser.email}}/></div>
     <div> <button type="submit" id="submit">등록 </button>
 </body>
@@ -171,6 +173,7 @@ $("#submit").click(function user_update() {
     let date = document.getElementById("date").value;
     let start_time = document.getElementById("start_time").value;
     let end_time = document.getElementById("end_time").value;
+    let admit_time = document.getElementById("admit_time").value;
     let email = document.getElementById("user").value.slice(0, -1);
     let title = document.getElementById("title").value;
 
@@ -183,6 +186,7 @@ $("#submit").click(function user_update() {
     form_data.append("date", date)
     form_data.append("start_time", start_time)
     form_data.append("end_time", end_time)
+    form_data.append("admit_time", admit_time)
     form_data.append("email", email)
     form_data.append("title", title)
     form_data.append("lat", lat)
