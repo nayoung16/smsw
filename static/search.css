@@ -17,12 +17,16 @@
     border-style : none;
     background-color:white;
     align-items: center;
+    top : 40%;
+    left : 30%;
   }
 
 .button{
     position: absolute;
     border-style : none;
     background-color:#B0FDB3;
+    top : 40% ;
+    left : 63% ;
 }
   
 input[type="search"]::placeholder {
@@ -40,5 +44,18 @@ input[type="search"]::placeholder {
     text-align: center;
 
     color: #000000;
-    border-color : #B0FDB3;
+    background-color:white;
+    height : 30px;
+    width : 110px;
+    border-style : none;
+    border-radius : 5px;
+}
+
+#vol_section {
+    background-color : #B0FDB3;
+}
+
+.recommend {
+    background-color : white;
+    border-style : none;
 }

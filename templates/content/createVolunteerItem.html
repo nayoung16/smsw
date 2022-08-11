@@ -73,47 +73,48 @@
 </nav>
     <br/><br/><br/>
     <div class="input-group mb-3" style="width:50%">
-    <input type="text" disabled id="sample5_address" class="form-control" placeholder="주소"
-    aria-describedby="button-addon2">
-    <div class="input-group-append">
-        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="sample5_execDaumPostcode()">주소 검색<br>
-        <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
-    </div>    
-    </div>
-    <div class="input-group mb-3" style="width:50%">
-        <span class="input-group-text" id="basic-addon1">제목</span>
-        <input type="text" id="title" class="form-control" aria-describedby="basic-addon1">
-    </div>
-   <div class="input-group mb-3" style="width:50%">
-        <input type="file" class="custom-file-input file" id="file">
-    </div>
-    <div class="input-group mb-3" style="width:50%">
-        <span class="input-group-text" id="basic-addon1">인원</span>
-        <input type="number" min="1" id="participant" class="form-control" aria-describedby="basic-addon1">
-    </div>
-    <div class="input-group">
-        <span class="input-group-text">설명</span>
-        <textarea class="form control" id="description" type="text"></textarea>
-    </div>
-    <br>
-    <div class="input-group mb-3" style="width:50%">
-        <span class="input-group-text" id="basic-addon1">날짜 선택</span>
-        <input id="date" type="date" class="form-control" aria-describedby="basic-addon1">
-    </div>
-    <div class="input-group mb-3" style="width:50%">
-        <span class="input-group-text" id="basic-addon1">시작 시간</span>
-        <input id="start_time" type="time" class="form-control" aria-describedby="basic-addon1">
-    </div>
-    <div class="input-group mb-3" style="width:50%">
-        <span class="input-group-text" id="basic-addon1">종료 시간</span>
-        <input id="end_time" type="time" class="form-control" aria-describedby="basic-addon1">
-    </div>
- 
-    <div><input style="display:none" id="user" type="text" value={{mainuser.email}}/></div>
-    <br>
-    <div class="input-group mb-3">
-        <button class="btn btn-outline-secondary" type="submit" id="submit">등록</button>
-    </div>
+        <input type="text" disabled id="sample5_address" class="form-control" placeholder="주소"
+        aria-describedby="button-addon2">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="sample5_execDaumPostcode()">주소 검색<br>
+            <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
+        </div>    
+        </div>
+        <div class="input-group mb-3" style="width:50%">
+            <span class="input-group-text" id="basic-addon1">제목</span>
+            <input type="text" id="title" class="form-control" aria-describedby="basic-addon1">
+        </div>
+       <div class="input-group mb-3" style="width:50%">
+            <input type="file" class="custom-file-input file" id="file">
+        </div>
+        <div class="input-group mb-3" style="width:50%">
+            <span class="input-group-text" id="basic-addon1">인원</span>
+            <input type="number" min="1" id="participant" class="form-control" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group">
+            <span class="input-group-text">설명</span>
+            <textarea class="form control" id="description" type="text"></textarea>
+        </div>
+        <br>
+        <div class="input-group mb-3" style="width:50%">
+            <span class="input-group-text" id="basic-addon1">날짜 선택</span>
+            <input id="date" type="date" class="form-control" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3" style="width:50%">
+            <span class="input-group-text" id="basic-addon1">시작 시간</span>
+            <input id="start_time" type="time" class="form-control" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3" style="width:50%">
+            <span class="input-group-text" id="basic-addon1">종료 시간</span>
+            <input id="end_time" type="time" class="form-control" aria-describedby="basic-addon1">
+        </div>
+    
+        <div><input style="display:none" id="user" type="text" value={{mainuser.email}}/></div>
+
+        <br>
+        <div class="input-group mb-3">
+            <button class="btn btn-outline-secondary" type="submit" id="submit">등록</button>
+        </div>
 </body>
 </html>
 
