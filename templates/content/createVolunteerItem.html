@@ -72,7 +72,8 @@
     </div>
 </nav>
     <br/><br/><br/>
-    <div class="input-group mb-3" style="width:50%">
+    <div style="width:50%; margin: 0 auto;">
+        <div class="input-group mb-3" style="width:100%">
         <input type="text" disabled id="sample5_address" class="form-control" placeholder="주소"
         aria-describedby="button-addon2">
         <div class="input-group-append">
@@ -80,43 +81,45 @@
             <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
         </div>    
         </div>
-        <div class="input-group mb-3" style="width:50%">
+        <div class="input-group mb-3" style="width:100%">
             <span class="input-group-text" id="basic-addon1">제목</span>
             <input type="text" id="title" class="form-control" aria-describedby="basic-addon1">
         </div>
-       <div class="input-group mb-3" style="width:50%">
-            <input type="file" class="custom-file-input file" id="file">
+       <div class="input-group mb-3" style="width:100%">
+            <span class="input-group-text" id="basic-addon1"></span>
+            <input type="file" class="custom-file-input file form-control" id="file">
         </div>
-        <div class="input-group mb-3" style="width:50%">
+        <div class="input-group mb-3" style="width:100%">
             <span class="input-group-text" id="basic-addon1">인원</span>
             <input type="number" min="1" id="participant" class="form-control" aria-describedby="basic-addon1">
         </div>
         <div class="input-group">
             <span class="input-group-text">설명</span>
-            <textarea class="form control" id="description" type="text"></textarea>
+            <textarea class="form control" id="description" type="text" style="width:92%"></textarea>
         </div>
         <br>
-        <div class="input-group mb-3" style="width:50%">
+        <div class="input-group mb-3" style="width:100%">
             <span class="input-group-text" id="basic-addon1">날짜 선택</span>
             <input id="date" type="date" class="form-control" aria-describedby="basic-addon1">
         </div>
-        <div class="input-group mb-3" style="width:50%">
+        <div class="input-group mb-3" style="width:100%">
             <span class="input-group-text" id="basic-addon1">시작 시간</span>
             <input id="start_time" type="time" class="form-control" aria-describedby="basic-addon1">
         </div>
-        <div class="input-group mb-3" style="width:50%">
+        <div class="input-group mb-3" style="width:100%">
             <span class="input-group-text" id="basic-addon1">종료 시간</span>
             <input id="end_time" type="time" class="form-control" aria-describedby="basic-addon1">
         </div>
-        <div class="input-group mb-3" style="width:50%">
+        <div class="input-group mb-3" style="width:100%">
             <span class="input-group-text" id="basic-addon1">봉사 인정 시간</span>
             <input id="admit_time" type="number" class="form-control" aria-describedby="basic-addon1">
         </div>
         <div><input style="display:none" id="user" type="text" value={{mainuser.email}}/></div>
         <br>
-        <div class="input-group mb-3">
+        <div class="input-group mb-3" style="width: 100px; margin: 0 auto;">
             <button class="btn btn-outline-secondary" type="submit" id="submit">등록</button>
         </div>
+    </div> 
 </body>
 </html>
 

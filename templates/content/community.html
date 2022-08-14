@@ -81,29 +81,29 @@ crossorigin="anonymous"></script>
 </nav>
 
 
-<div style="display: flex; flex-direction: row;text-align: center; justify-content: center;padding-top: 60px; background-color:#FAFAFA">
-    <div style="width: 500px;min-width: 500px;margin-right: 300px">
+<div style="width: 100%; display: flex; text-align: center; justify-content: center;padding-top: 60px; background-color:#FAFAFA">
+    <div>
         <ul class="nav nav-pills" role="tablist" style="color:#B0FDB3;">
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#review">봉사후기</a>
+                <a class="show_feed_boxes nav-link active" data-toggle="tab" href="#review">봉사후기</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#recruit">봉사모집</a>
+                <a class="show_volunteer_boxes nav-link" data-toggle="tab" href="#recruit">봉사모집</a>
             </li>
         </ul>
         <div class="tab-content">
-            <div class="tab-pane fade show active" id="review">
+            <div class="feed_boxes tab-pane fade show active" style="width: 1200px; margin: 0 auto; display:flex; flex-wrap: wrap;" id="review">
                 <!-- 여기서부터 피드박스 -->
                 {% for feed in feeds %}
-                <div class="feed_box">
-                    <div style="display: flex;flex-direction: row; align-items: center; margin: 20px; position: relative;">
-                    <div class="box" style="width: 35px; height: 35px ">
-                        <img class="profile" src="{% get_media_prefix %}{{ feed.profile_image }}">
-                    </div>
-                    <div>{{ feed.nickname }}</div>
-                    {%if feed.nickname == mainuser.nickname%}
-                        <div id = "deletebox_feed" feed_id="{{ feed.id }}" class="deletebox_feed" style = "width: 35px; height: 35pxpx; position: absolute; right: 0px; background-color: red; cursor:pointer;">삭제하기</div>
-                    {%endif%}
+                <div class="feed_box " style="width: 250px; height: 350px; margin: 20px; border:0; box-shadow: 0px 2px 2px 0px gray; border-radius: 5%;">
+                    <div style="display: flex; flex-wrap: wrap; flex-direction: row; align-items: center; margin: 20px; position: relative;">
+                        <div class="box" style="width: 20px; height: 20px ">
+                            <img class="profile" src="{% get_media_prefix %}{{ feed.profile_image }}">
+                        </div>
+                        <div>{{ feed.nickname }}</div>
+                        {%if feed.nickname == mainuser.nickname%}
+                            <div id = "deletebox_feed" feed_id="{{ feed.id }}" class="deletebox_feed" style = "width: 35px; height: 35pxpx; position: absolute; right: 0px; background-color: red; cursor:pointer;">삭제하기</div>
+                        {%endif%}
                 </div>
                 <div>
                     <img style="width: 100%" src="{% get_media_prefix %}{{ feed.image }}">
@@ -120,21 +120,18 @@ crossorigin="anonymous"></script>
                         {% endif %}
                     </span>
                 </div>
-                <div>
-                    <span id="bookmark_{{ feed.id }}" feed_id="{{ feed.id }}" class="bookmark material-icons-outlined" style="cursor: pointer">
-                        {% if feed.is_marked %}
-                        bookmark
-                        {% else %}
-                        bookmark_border
-                        {% endif %}
-                    </span>
-                </div>
             </div>
             <div style="margin: 0 20px;text-align: left;font-size: 14px"> 춘식이 <b>외 {{ feed.like_count }}명</b>이좋아합니다.</div>
             <div style="margin: 0 20px;text-align: left;font-size: 16px">
-                <b>{{ feed.nickname }}</b> {{ feed.content }}
+                <b>{{ feed.nickname }}</b> 
+                {%if feed.content|length|get_digit:"-1" > 35  %}
+                    {{ feed.content | slice:"35"}}...
+                {%else%}
+                    {{ feed.content}}
+                {%endif%}
             </div>
-            <div id="reply_list_{{ feed.id }}">
+            <!-- 댓글 부분 -->
+            {% comment %} <div id="reply_list_{{ feed.id }}">
                 {% for reply in feed.reply_list %}
                     <div style="margin: 0 20px;text-align: left;font-size: 14px">
                         <b>{{ reply.nickname }}</b> {{ reply.reply_content }}</div>
@@ -148,19 +145,55 @@ crossorigin="anonymous"></script>
                     style="width: 50px;color: cornflowerblue; font-weight: bold">
                     게시
                 </div>
-            </div>
+            </div> {% endcomment %}
         </div>
     {% endfor %}
 </div>
 <!-- 여기까지 피드박스 -->
 
-    <div class="tab-pane fade" id="recruit">
+    <div class="tab-pane fade" class="volunteer_boxes tab-pane fade show active" style="width: 1200px; margin: 0 auto; display:flex; flex-wrap: wrap;" id="recruit">
     <!--여기서부터 봉사 아이템-->
         {% for volunteer in volunteers %}
         {%if volunteer.grant == 1 %}
         {%else%}
-        <div class="feed_box">
-            <div style="display: flex;flex-direction: row; align-items: center; margin: 20px; position: relative;">
+        <div class="feed_box" style="width: 250px; height:350px; margin: 20px; border:0; border-radius: 5%; box-shadow: 0px 2px 2px 0px gray;">
+            <div style="display:flex; flex-wrap: wrap; align-items: center; margin: 20px; position: relative;">
+                {%if volunteer.admin == mainuser%}
+                <div id = "deletebox_volunteer" volunteer_id="{{ volunteer.id }}" class="deletebox_volunteer" style = "width: 35px; height: 35pxpx; position: absolute; right: 0px; background-color: red; cursor:pointer;">삭제하기</div>
+                {%endif%}
+                <div>{{volunteer.create_time}}</div>
+                {%if mainuser.role == 'User'%}
+                    {%if volunteer.isparticipated%}
+                    <div id = "not_participate_volunteer" volunteer_id="{{ volunteer.id }}" class="not_participate_volunteer" style = "width: 35px; height: 35pxpx; position: absolute; right: 0px; background-color: green; cursor:pointer;">참여취소</div>
+                    {%else%}
+                    <div id = "participate_volunteer" volunteer_id="{{ volunteer.id }}" class="participate_volunteer" style = "width: 35px; height: 35pxpx; position: absolute; right: 0px; background-color: green; cursor:pointer;">참여하기</div>
+                    {%endif%}
+                {%endif%}
+            </div>
+            <div><img style="width: 100%" src="{% get_media_prefix %}{{ volunteer.image }}"></div>
+            <div style="margin: 0 20px;display: flex; flex-direction: row; justify-content: space-between">
+                <div>
+                    <span id="bookmark_{{ volunteer.id }}" volunteer_id="{{ volunteer.id }}" class="bookmark material-icons-outlined" style="cursor: pointer">
+                        {% if volunteer.is_marked %}
+                        bookmark
+                        {% else %}
+                        bookmark_border
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <div style="margin: 0 20px;text-align: left;font-size: 14px"> 
+                {{ volunteer.region }} 지역
+            </div>
+            <div style="margin: 0 20px;text-align: left;font-size: 14px"> 
+                {{ volunteer.participant }}명 남음
+            </div>
+        </div>
+        {%endif%} 
+        {% comment %} {%if volunteer.grant == 1 %}
+        {%else%}
+        <div class="feed_box" style="width: 250px; height:350px; margin: 20px;">
+            <div style="display: flex; flex-direction: row; align-items: center; margin: 20px; position: relative;">
                 {%if volunteer.admin == mainuser%}
                 <div id = "deletebox_volunteer" volunteer_id="{{ volunteer.id }}" class="deletebox_volunteer" style = "width: 35px; height: 35pxpx; position: absolute; right: 0px; background-color: red; cursor:pointer;">삭제하기</div>
                 {%endif%}
@@ -193,7 +226,7 @@ crossorigin="anonymous"></script>
                 <b>{{ volunteer.participant }}명</b> 남음
             </div>
         </div>
-        {%endif%}    
+        {%endif%}     {% endcomment %}
         {% endfor %}
         </div>
             </div>
@@ -257,6 +290,24 @@ crossorigin="anonymous"></script>
 
 <!-- Optional JavaScript; choose one of the two! -->
 <script>
+    $(".show_feed_boxes").click(function (event) {
+        $(".volunteer_boxes").css({
+            display: 'none'
+        })
+        $(".feed_boxes").css({
+            display: 'flex'
+        });
+    })
+
+    $(".show_volunteer_boxes").click(function (event) {
+        $(".feed_boxes").css({
+            display: 'none'
+        });
+        $(".volunteer_boxes").css({
+            display: 'flex'
+        })
+    })
+
     $(".bookmark").click(function (event) {
         let volunteer_id = event.target.attributes.getNamedItem('volunteer_id').value;
         let bookmark_id = event.target.id;
