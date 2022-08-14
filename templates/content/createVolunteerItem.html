@@ -212,7 +212,8 @@ $.ajax({
         contentType: false,
         processData: false,
         success: function (response) {
-            alert("성공")
+            alert("봉사가 등록되었습니다.")
+            location.replace("/main/community");
         },
     })
 }
