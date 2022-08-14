@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import DeleteVolunteer, SearchResult, UploadFeed, Profile,\
     Community, UploadReply, ToggleLike, ToggleBookmark, DeleteFeed, createVolunteerITem, \
-        Main, Search
+        Main, Search, Follow, Participate, NotParticipate
 from . import views
 
 
@@ -22,8 +22,10 @@ urlpatterns = [
     path('reply_feed', UploadReply.as_view()),
     path('like_feed', ToggleLike.as_view()),
 
-
+    path('test', Follow.as_view(), name="test"),
 
     path('bookmark_volunteer', ToggleBookmark.as_view()),
+    path('participate_volunteer', Participate.as_view()),
+    path('not_participate_volunteer', NotParticipate.as_view()),
 ]
 

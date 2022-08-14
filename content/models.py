@@ -1,11 +1,13 @@
 from django.db import models
 from user.models import User
+import datetime
 
 # Create your models here.
 class Feed(models.Model):
     content = models.TextField()    # 글내용
     image = models.TextField()  # 피드 이미지
     email = models.EmailField(default='')     # 글쓴이
+    create_time = models.DateTimeField(default=datetime.datetime.now())
 
 
 class Like(models.Model):
@@ -25,7 +27,6 @@ class Bookmark(models.Model):
     email = models.EmailField(default='')
     is_marked = models.BooleanField(default=True)
 
-
 class VolunteerItem(models.Model):
     admin = models.ForeignKey(User,on_delete = models.CASCADE)
     title = models.TextField(default='')
@@ -38,4 +39,11 @@ class VolunteerItem(models.Model):
     date = models.DateField(default = None)
     start_time = models.TimeField(default = None)
     end_time = models.TimeField(default = None)
+    admit_time = models.IntegerField(default = 0)
     done = models.BooleanField(default=False)
+    create_time = models.DateTimeField(default=datetime.datetime.now())
+
+class ParticipateItems(models.Model):
+    grant = models.BooleanField(default=False)
+    volunteerItem = models.OneToOneField(VolunteerItem, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
