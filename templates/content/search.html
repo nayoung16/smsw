@@ -109,9 +109,11 @@
 
     </div>
     {%if volunteer_list%}
-        {% for a in volunteer_list %}
-            <div>{{a.region}}</div>
-            <div>{{a.description}}</div>
+        {%for item in volunteer_list%}
+            {% for a in item %}
+                <div>{{a.region}}</div>
+                <div>{{a.description}}</div>
+            {% endfor %}
         {% endfor %}
     {%endif%}
     </section>
