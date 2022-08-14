@@ -67,3 +67,10 @@ input[type="search"]::placeholder {
     background-color : white;
     border-style : none;
 }
+
+.result_box {
+    background-color : white;
+    border-style : none;
+    width : 80%;
+    height : 50%;
+}
