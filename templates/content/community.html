@@ -95,7 +95,7 @@ crossorigin="anonymous"></script>
             <div class="feed_boxes tab-pane fade show active" style="width: 1200px; margin: 0 auto; display:flex; flex-wrap: wrap;" id="review">
                 <!-- 여기서부터 피드박스 -->
                 {% for feed in feeds %}
-                <div class="feed_box " style="width: 250px; height: 350px; margin: 20px;">
+                <div class="feed_box " style="width: 250px; height: 350px; margin: 20px; border:0; box-shadow: 0px 2px 2px 0px gray; border-radius: 5%;">
                     <div style="display: flex; flex-wrap: wrap; flex-direction: row; align-items: center; margin: 20px; position: relative;">
                         <div class="box" style="width: 20px; height: 20px ">
                             <img class="profile" src="{% get_media_prefix %}{{ feed.profile_image }}">
@@ -120,19 +120,15 @@ crossorigin="anonymous"></script>
                         {% endif %}
                     </span>
                 </div>
-                <div>
-                    <span id="bookmark_{{ feed.id }}" feed_id="{{ feed.id }}" class="bookmark material-icons-outlined" style="cursor: pointer">
-                        {% if feed.is_marked %}
-                        bookmark
-                        {% else %}
-                        bookmark_border
-                        {% endif %}
-                    </span>
-                </div>
             </div>
             <div style="margin: 0 20px;text-align: left;font-size: 14px"> 춘식이 <b>외 {{ feed.like_count }}명</b>이좋아합니다.</div>
             <div style="margin: 0 20px;text-align: left;font-size: 16px">
-                <b>{{ feed.nickname }}</b> {{ feed.content }}
+                <b>{{ feed.nickname }}</b> 
+                {%if feed.content|length|get_digit:"-1" > 35  %}
+                    {{ feed.content | slice:"35"}}...
+                {%else%}
+                    {{ feed.content}}
+                {%endif%}
             </div>
             <!-- 댓글 부분 -->
             {% comment %} <div id="reply_list_{{ feed.id }}">
@@ -160,7 +156,7 @@ crossorigin="anonymous"></script>
         {% for volunteer in volunteers %}
         {%if volunteer.grant == 1 %}
         {%else%}
-        <div class="feed_box" style="width: 250px; height:350px; margin: 20px;">
+        <div class="feed_box" style="width: 250px; height:350px; margin: 20px; border:0; border-radius: 5%; box-shadow: 0px 2px 2px 0px gray;">
             <div style="display:flex; flex-wrap: wrap; align-items: center; margin: 20px; position: relative;">
                 {%if volunteer.admin == mainuser%}
                 <div id = "deletebox_volunteer" volunteer_id="{{ volunteer.id }}" class="deletebox_volunteer" style = "width: 35px; height: 35pxpx; position: absolute; right: 0px; background-color: red; cursor:pointer;">삭제하기</div>
