@@ -79,7 +79,35 @@
         <div class="search_result">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
             <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
-          </svg>검색 결과</div><br><br>
+          </svg>검색 결과</div><br>
+    <div class="result_box" style = "background-color : white;">
+        <table>
+            <thead>
+                <tr>
+                    <td>지역  </td>
+                    <td>세부 내용</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>지역1  </td>
+                <td>세부내용1</td>
+                </tr>
+                <tr>
+                    <td>지역2  </td>
+                    <td>세부내용2</td>
+                </tr>
+                <tr>
+                    <td>지역3  </td>
+                    <td>세부내용3</td>
+                </tr>
+                <tr>
+                    세부내용 클릭하면 모달창 띄워서 확인, 스크랩 or 커뮤니티로 이동해서 스크랩
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
     {%if volunteer_list%}
         {% for a in volunteer_list %}
             <div>{{a.region}}</div>
