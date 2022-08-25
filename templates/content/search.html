@@ -88,15 +88,23 @@
             <div class="flex_item" style="width:150px; height:150px; margin: 20px; background-color:white;">
                 <div>지역 : {{a.region}}</div>
                 <div>내용 : {{a.description}}</div>
-                <span id="detail_button" class="material-icons-outlined">add_box</span>
+                <!--<span id="detail_button" class="material-icons-outlined">add_box</span>-->
+                <span id="bookmark_{{ volunteer.id }}" volunteer_id="{{ volunteer.id }}" class="bookmark material-icons-outlined" style="cursor: pointer">
+                    {% if volunteer.is_marked %}
+                    bookmark
+                    {% else %}
+                    bookmark_border
+                    {% endif %}
+                </span>
             </div>
             {% endfor %}
         {% endfor %}
     {%endif%}
+            
 </div>
     
     </section>
-    
+    <!--
     <div id="detail_modal" class="modal_overlay">
         <div class="modal_window">
             <div style="display: flex; flex-direction: row; justify-content: space-between">
@@ -104,18 +112,18 @@
     
                 </div>
                 <div>
-                    새 이미지 업로드
+                    봉사 상세 내용
                 </div>
                 <div style="width: 40px; background: gray">
                     <span class="modal_close material-icons-outlined">close</span>
                 </div>
             </div>
     
-            <div class="img_upload_space" style="border-top: solid 1px gray;width: 778px; height: 540px;margin-top: 10px">
-    
+            <div style="border-top: solid 1px gray;width: 778px; height: 540px;margin-top: 10px">
             </div>
         </div>
     </div>
+-->
 </body>
 </html>
 
@@ -174,6 +182,35 @@ $('#detail_button').click(function () {
 $(".modal_close").click(function () {
     $('#detail_modal').css({
         display: 'none'
+    });
+});
+
+$(".bookmark").click(function (event) {
+    let volunteer_id = event.target.attributes.getNamedItem('volunteer_id').value;
+    let bookmark_id = event.target.id;
+    let bookmark_text = $.trim($('#' + bookmark_id).html());
+    if (bookmark_text == 'bookmark') {
+        $('#' + bookmark_id).html('bookmark_border');
+    } else {
+        $('#' + bookmark_id).html('bookmark');
+    }
+
+    $.ajax({
+        url: "/main/bookmark_volunteer",
+        data: {
+            volunteer_id: volunteer_id,
+            bookmark_text: bookmark_text
+        },
+        method: "POST",
+        success: function (data) {
+            console.log("성공");
+        },
+        error: function (request, status, error) {
+            console.log("에러");
+        },
+        complete: function () {
+            console.log("완료");
+        }
     });
 });
 </script>
