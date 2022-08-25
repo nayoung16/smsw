@@ -167,11 +167,13 @@ class Profile(APIView):
             participated_list =[]
             participated_list.append(ParticipateItems.objects.filter(user_id = mainuser.id).all()) # 현재 유저가 신청한 volunteeritem들
             for participated_item in participated_list:
-                participate_item = VolunteerItem.objects.filter(id = participated_item.first().volunteerItem_id) # 직접 volunteeritem 객체 배열에 넣어주기
-                if participate_item:
-                    grant = ParticipateItems.objects.filter(volunteerItem_id = participate_item.first().id).first().grant # 해당 봉사의 승인 여부
-                    print(grant)
-                    participate_list.append([participate_item, grant])
+               if(participated_item):
+                    participate_item = VolunteerItem.objects.filter(id = participated_item.first().volunteerItem_id) # 직접 volunteeritem 객체 배열에 넣어주기
+                    if participate_item:
+                        grant = ParticipateItems.objects.filter(volunteerItem_id = participate_item.first().id).first().grant # 해당 봉사의 승인 여부
+                        print(grant)
+                        participate_list.append([participate_item, grant])
+                    continue
 
         feed_list = Feed.objects.filter(email=email)
         like_list = list(Like.objects.filter(email=email, is_like=True).values_list('feed_id', flat=True))
