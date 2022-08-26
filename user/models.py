@@ -13,11 +13,11 @@ class User(AbstractBaseUser):
         유저 이메일주소 -> 회원가입할때 사용하는 아이디
         유저 비밀번호 -> 디폴트 쓰자
     """
-    RANKING_SEED = '1'
-    RANKING_SPROUT = '2'
-    RANKING_SEEDLING = '3'
-    RANKING_TREE = '4'
-    RANKING_FLOWER = '5'
+    RANKING_SEED = 'Seed'
+    RANKING_SPROUT = 'Sprout'
+    RANKING_SEEDLING = 'Seedling'
+    RANKING_TREE = 'Tree'
+    RANKING_FLOWER = 'Flower'
     RANKING_CHOICES = [
         (RANKING_SEED, 'Seed'),
         (RANKING_SPROUT, 'Sprout'),
@@ -26,14 +26,14 @@ class User(AbstractBaseUser):
         (RANKING_FLOWER, 'Flower'),
     ]
 
-    ROLE_ADMIN = 'A'
-    ROLE_USER = 'U'
+    ROLE_ADMIN = 'Admin'
+    ROLE_USER = 'User'
     ROLE_CHOICES = [
         (ROLE_ADMIN, 'Admin'),
         (ROLE_USER, 'User')
     ]
-    role = models.CharField(max_length=1, choices = ROLE_CHOICES, default = ROLE_USER)
-    ranking = models.CharField(max_length=1, choices = RANKING_CHOICES, default = RANKING_SEED)
+    role = models.CharField(max_length=10, choices = ROLE_CHOICES, default = ROLE_USER)
+    ranking = models.CharField(max_length=10, choices = RANKING_CHOICES, default = RANKING_SEED)
     profile_image = models.TextField()  # 프로필 이미지
     nickname = models.CharField(max_length=24, unique=True)
     name = models.CharField(max_length=24)

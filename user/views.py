@@ -19,11 +19,19 @@ class Join(APIView):
         nickname = request.data.get('nickname', None)
         name = request.data.get('name', None)
         password = request.data.get('password', None)
+        role = request.data.get('role', None)
+        residence = request.data.get('residence', None)
+        lat = request.data.get('lat', None)
+        lng = request.data.get('lng', None)
 
         User.objects.create(email=email,
                             nickname=nickname,
                             name=name,
                             password=make_password(password),
+                            role = role,
+                            residence = residence,
+                            lat = lat,
+                            lng = lng
                             # profile_image="default_profile.png",
                             )
 
