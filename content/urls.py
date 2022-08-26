@@ -12,7 +12,7 @@ urlpatterns = [
     path('community', Community.as_view(), name="community"),
     path('profile', Profile.as_view(), name="profile"),
     path('search', Search.as_view(), name="search"),
-    path('search_result',  SearchResultResult.as_view(), name="search_result"),
+    path('search_result',  SearchResult.as_view(), name="search_result"),
 
     path('createvolunteer', createVolunteerITem.as_view(), name="create_volunteer"),
     path('deletevolunteer', DeleteVolunteer.as_view()),
