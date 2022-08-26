@@ -49,7 +49,7 @@ class Community(APIView):
                                 nickname=user.nickname,
                                 reply_list=reply_list,
                                 is_liked=is_liked,
-                                create_time = feed.create_time
+                                is_marked=is_marked
                                 ))
 
         for volunteer in volunteer_object_list:
@@ -73,6 +73,8 @@ class Community(APIView):
                                 is_marked = is_marked,
                                 create_time = volunteer.create_time
                                 ))
+
+
 
         return render(request, "content/community.html", context=dict(feeds=feed_list, 
                                                                     volunteers = volunteer_list,
