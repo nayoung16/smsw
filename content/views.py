@@ -281,6 +281,9 @@ class ToggleBookmark(APIView):
 class Search(APIView):
     def get(self, request):
         email = request.session.get('email', None)
+
+        if email is None:
+            return render(request, "user/login.html")
         mainuser = User.objects.filter(email=email).first()
 
         distance=[]
