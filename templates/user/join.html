@@ -116,7 +116,7 @@ function sample5_execDaumPostcode() {
             geocoder.addressSearch(data.address, function(results, status) {
                 // 정상적으로 검색이 완료됐으면
                 if (status === daum.maps.services.Status.OK) {
-
+                    alert("서비스 OK")
                     var result = results[0]; //첫번째 결과의 값을 활용
 
                     // 해당 주소에 대한 좌표를 받아서
