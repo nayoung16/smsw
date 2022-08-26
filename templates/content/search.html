@@ -80,22 +80,42 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
             <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
           </svg>검색 결과</div><br>
-   <div class="flex_container" style="display:flex; ">
+   <div class="flex_container">
     {%if volunteer_list%}
         {%for item in volunteer_list%}
-        <div class="flex_item" style="width:150px; height:150px; margin: 20px; background-color:white;">
+        
             {% for a in item %}
+            <div class="flex_item" style="width:150px; height:150px; margin: 20px; background-color:white;">
                 <div>지역 : {{a.region}}</div>
                 <div>내용 : {{a.description}}</div>
+                <span id="detail_button" class="material-icons-outlined">add_box</span>
+            </div>
             {% endfor %}
-        </div>
         {% endfor %}
     {%endif%}
 </div>
     
     </section>
     
-
+    <div id="detail_modal" class="modal_overlay">
+        <div class="modal_window">
+            <div style="display: flex; flex-direction: row; justify-content: space-between">
+                <div style="width: 40px; background: gray">
+    
+                </div>
+                <div>
+                    새 이미지 업로드
+                </div>
+                <div style="width: 40px; background: gray">
+                    <span class="modal_close material-icons-outlined">close</span>
+                </div>
+            </div>
+    
+            <div class="img_upload_space" style="border-top: solid 1px gray;width: 778px; height: 540px;margin-top: 10px">
+    
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 
@@ -140,5 +160,20 @@
     })
 }) ();
 
+$('#detail_button').click(function () {
+    $('#detail_modal').css({
+        display: 'flex'
+    });
 
+    $(document.body).css({
+        overflow: 'hidden'
+    });
+
+});
+
+$(".modal_close").click(function () {
+    $('#detail_modal').css({
+        display: 'none'
+    });
+});
 </script>
