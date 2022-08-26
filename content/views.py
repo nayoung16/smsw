@@ -459,7 +459,12 @@ class Follow(APIView):
 def feed_detail(request, feed_id):
     feed = get_object_or_404(Feed, pk = feed_id)
     user = User.objects.filter(email=feed.email).first()
-    context = {"feed": feed, "nickname": user.nickname, "profile_image" : user.profile_image}
+    reply_object_list = Reply.objects.filter(feed_id=feed.id)
+    reply_list = []
+    for reply in reply_object_list:
+        user = User.objects.filter(email=reply.email).first()
+        reply_list.append(dict(reply_content=reply.reply_content,nickname=user.nickname))
+    context = {"feed": feed, "nickname": user.nickname, "profile_image" : user.profile_image, "reply_list" : reply_list}
     return render(request, "content/feed_detail.html", context)
 
 def volunteer_detail(request, feed_id):

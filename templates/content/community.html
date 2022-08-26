@@ -135,8 +135,8 @@ crossorigin="anonymous"></script>
                         {{ feed.content}}
                     {%endif%}
                 </div>
-                        <!-- 댓글 부분 -->
-                        {% comment %} <div id="reply_list_{{ feed.id }}">
+                        {% comment %} <!-- 댓글 부분 -->
+                        <div id="reply_list_{{ feed.id }}">
                             {% for reply in feed.reply_list %}
                                 <div style="margin: 0 20px;text-align: left;font-size: 14px">
                                     <b>{{ reply.nickname }}</b> {{ reply.reply_content }}</div>
@@ -150,7 +150,7 @@ crossorigin="anonymous"></script>
                                 style="width: 50px;color: cornflowerblue; font-weight: bold">
                                 게시
                             </div>
-                        </div> {% endcomment %}
+                        </div>  {% endcomment %}
                     </div>
                 {% endfor %}
                 </div>
