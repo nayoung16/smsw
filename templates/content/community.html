@@ -81,78 +81,85 @@ crossorigin="anonymous"></script>
 </nav>
 
 
-<div style="width: 100%; display: flex; text-align: center; justify-content: center;padding-top: 60px; background-color:#FAFAFA">
+<div style="width: 100%; height: 60px; display: flex; text-align: center; justify-content: center;padding-top: 60px; background-color:#FAFAFA">
     <div>
         <ul class="nav nav-pills" role="tablist" style="color:#B0FDB3;">
-            <li class="nav-item">
+            <li id = "volunteer_review" class="nav-item">
                 <a class="show_feed_boxes nav-link active" data-toggle="tab" href="#review">봉사후기</a>
             </li>
-            <li class="nav-item">
+            <li id = "volunteer_recruit" class="nav-item">
                 <a class="show_volunteer_boxes nav-link" data-toggle="tab" href="#recruit">봉사모집</a>
             </li>
         </ul>
         <div class="tab-content">
             <div class="feed_boxes tab-pane fade show active" style="width: 1200px; margin: 0 auto; display:flex; flex-wrap: wrap;" id="review">
                 <!-- 여기서부터 피드박스 -->
-                {% for feed in feeds %}
-                <div class="feed_box " style="width: 250px; height: 350px; margin: 20px; border:0; box-shadow: 0px 2px 2px 0px gray; border-radius: 5%;">
-                    <div style="display: flex; flex-wrap: wrap; flex-direction: row; align-items: center; margin: 20px; position: relative;">
-                        <div class="box" style="width: 20px; height: 20px ">
-                            <img class="profile" src="{% get_media_prefix %}{{ feed.profile_image }}">
+                <div id = "volunteer_review_content" style="width:1200px; display:flex; flex-wrap:wrap;">
+                    {% for feed in feeds %}
+                    <a href="feed_detail/{{feed.id}}">
+                        <div id = "select_review" class="{{feed.id}}" style="width: 250px; height: 350px; margin: 20px; border:0; box-shadow: 0px 2px 2px 0px gray; border-radius: 5%;"> 
+                            <div class="feed_box ">
+                                <div style="display: flex; flex-wrap: wrap; flex-direction: row; align-items: center; margin: 20px; position: relative;">
+                                    <div class="box" style="width: 20px; height: 20px ">
+                                        <img class="profile" src="{% get_media_prefix %}{{ feed.profile_image }}">
+                                    </div>
+                                    <div>{{ feed.nickname }}</div>
+                                    {%if feed.nickname == mainuser.nickname%}
+                                        <div id = "deletebox_feed" feed_id="{{ feed.id }}" class="deletebox_feed" style = "width: 35px; height: 35pxpx; position: absolute; right: 0px; background-color: red; cursor:pointer;">삭제하기</div>
+                                    {%endif%}
+                            </div>
+                            <div>
+                                <img style="width: 100%" src="{% get_media_prefix %}{{ feed.image }}">
+                            </div>
+                            <div style="margin: 0 20px;display: flex; flex-direction: row; justify-content: space-between">
+                            <div>
+                                <span id="favorite_{{ feed.id }}" feed_id="{{ feed.id }}"
+                                    class="favorite material-icons-outlined"
+                                    style="color: red;cursor: pointer">
+                                    {% if feed.is_liked %}
+                                    favorite
+                                    {% else %}
+                                    favorite_border
+                                    {% endif %}
+                                </span>
+                            </div>
                         </div>
-                        <div>{{ feed.nickname }}</div>
-                        {%if feed.nickname == mainuser.nickname%}
-                            <div id = "deletebox_feed" feed_id="{{ feed.id }}" class="deletebox_feed" style = "width: 35px; height: 35pxpx; position: absolute; right: 0px; background-color: red; cursor:pointer;">삭제하기</div>
-                        {%endif%}
+                    </a>
                 </div>
-                <div>
-                    <img style="width: 100%" src="{% get_media_prefix %}{{ feed.image }}">
+                <div style="margin: 0 20px;text-align: left;font-size: 14px"> 춘식이 <b>외 {{ feed.like_count }}명</b>이좋아합니다.</div>
+                <div style="margin: 0 20px;text-align: left;font-size: 16px">
+                    <b>{{ feed.nickname }}</b> 
+                    {%if feed.content|length|get_digit:"-1" > 35  %}
+                        {{ feed.content | slice:"22"}}...
+                    {%else%}
+                        {{ feed.content}}
+                    {%endif%}
                 </div>
-                <div style="margin: 0 20px;display: flex; flex-direction: row; justify-content: space-between">
-                <div>
-                    <span id="favorite_{{ feed.id }}" feed_id="{{ feed.id }}"
-                        class="favorite material-icons-outlined"
-                        style="color: red;cursor: pointer">
-                        {% if feed.is_liked %}
-                        favorite
-                        {% else %}
-                        favorite_border
-                        {% endif %}
-                    </span>
-                </div>
-            </div>
-            <div style="margin: 0 20px;text-align: left;font-size: 14px"> 춘식이 <b>외 {{ feed.like_count }}명</b>이좋아합니다.</div>
-            <div style="margin: 0 20px;text-align: left;font-size: 16px">
-                <b>{{ feed.nickname }}</b> 
-                {%if feed.content|length|get_digit:"-1" > 35  %}
-                    {{ feed.content | slice:"35"}}...
-                {%else%}
-                    {{ feed.content}}
-                {%endif%}
-            </div>
-            <!-- 댓글 부분 -->
-            {% comment %} <div id="reply_list_{{ feed.id }}">
-                {% for reply in feed.reply_list %}
-                    <div style="margin: 0 20px;text-align: left;font-size: 14px">
-                        <b>{{ reply.nickname }}</b> {{ reply.reply_content }}</div>
+                        <!-- 댓글 부분 -->
+                        {% comment %} <div id="reply_list_{{ feed.id }}">
+                            {% for reply in feed.reply_list %}
+                                <div style="margin: 0 20px;text-align: left;font-size: 14px">
+                                    <b>{{ reply.nickname }}</b> {{ reply.reply_content }}</div>
+                            {% endfor %}
+                        </div>
+                        <div style="display:flex;flex-direction: row;align-items: center; border-top: solid 1px gray ">
+                            <input id="reply_{{ feed.id }}" type="text" class="form-control"
+                                style="box-shadow: none; border: none; outline: none"
+                                placeholder="댓글 달기..">
+                            <div feed_id="{{ feed.id }}" class="upload_reply"
+                                style="width: 50px;color: cornflowerblue; font-weight: bold">
+                                게시
+                            </div>
+                        </div> {% endcomment %}
+                    </div>
                 {% endfor %}
-            </div>
-            <div style="display:flex;flex-direction: row;align-items: center; border-top: solid 1px gray ">
-                <input id="reply_{{ feed.id }}" type="text" class="form-control"
-                    style="box-shadow: none; border: none; outline: none"
-                    placeholder="댓글 달기..">
-                <div feed_id="{{ feed.id }}" class="upload_reply"
-                    style="width: 50px;color: cornflowerblue; font-weight: bold">
-                    게시
                 </div>
-            </div> {% endcomment %}
-        </div>
-    {% endfor %}
 </div>
 <!-- 여기까지 피드박스 -->
 
     <div class="tab-pane fade" class="volunteer_boxes tab-pane fade show active" style="width: 1200px; margin: 0 auto; display:flex; flex-wrap: wrap;" id="recruit">
     <!--여기서부터 봉사 아이템-->
+    <div id = "volunteer_recruit_content" style="width:1200px; display:flex; flex-wrap:wrap; display:none;">
         {% for volunteer in volunteers %}
         {%if volunteer.grant == 1 %}
         {%else%}
@@ -228,11 +235,15 @@ crossorigin="anonymous"></script>
         </div>
         {%endif%}     {% endcomment %}
         {% endfor %}
-        </div>
-            </div>
-        </div>
+    </div>
     </div>
 </div>
+
+    <div id="feed_detail" style="width: 200px; height: 200px; background-color:green; display:none;">
+        <div id="close_feed_detail">X</div>
+        게시물 상세 모달창
+    </div>
+
     <!-- 첫번째 모달 -->
     <div id="first_modal" class="modal_overlay">
         <div class="modal_window">
@@ -287,6 +298,7 @@ crossorigin="anonymous"></script>
     
         </div>
     </div>
+
 
 <!-- Optional JavaScript; choose one of the two! -->
 <script>
@@ -599,6 +611,44 @@ crossorigin="anonymous"></script>
                 }
             });
           }
+    });
+
+    $('#select_feed').click(function () {
+        $('#feed_detail').css({
+            display: 'flex'
+        });S
+    });
+
+    $('#volunteer_review').click(function () {
+        $('#volunteer_review_content').css({
+            display: 'flex'
+        });
+
+        $('#volunteer_recruit_content').css({
+            display: "none"
+        });
+    });
+
+    $('#volunteer_recruit').click(function () {
+        $('#volunteer_recruit_content').css({
+            display: 'flex'
+        });
+
+        $('#volunteer_review_content').css({
+            display: "none"
+        });
+    });
+
+    $('#select_review').click(function () {
+        $('#feed_detail').css({
+            display: 'flex'
+        });
+    });
+
+    $('#close_feed_detail').click(function () {
+        $('#feed_detail').css({
+            display: 'none'
+        });
     });
 
 

@@ -12,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from . import config
 import math
 import collections
+from django.shortcuts import get_object_or_404
 
 class Community(APIView):
     def get(self, request):
@@ -159,6 +160,7 @@ class Profile(APIView):
                 participated_created_list = ParticipateItems.objects.filter(volunteerItem_id = item.id).all() # 신청된 것들 선발
                 if participated_created_list : #만약 신청 받은 것이 있다면
                     for participated_item in participated_created_list:
+
                         user = User.objects.filter(id = participated_item.user_id).first()
                         participated_user_list.append(user) # 신청 받은 각각의 봉사 item에 대한 user들 리스트에 넣기
                         isgranted = participated_item.grant
@@ -167,11 +169,13 @@ class Profile(APIView):
             participated_list =[]
             participated_list.append(ParticipateItems.objects.filter(user_id = mainuser.id).all()) # 현재 유저가 신청한 volunteeritem들
             for participated_item in participated_list:
-                participate_item = VolunteerItem.objects.filter(id = participated_item.first().volunteerItem_id) # 직접 volunteeritem 객체 배열에 넣어주기
-                if participate_item:
-                    grant = ParticipateItems.objects.filter(volunteerItem_id = participate_item.first().id).first().grant # 해당 봉사의 승인 여부
-                    print(grant)
-                    participate_list.append([participate_item, grant])
+                if(participated_item):
+                    participate_item = VolunteerItem.objects.filter(id = participated_item.first().volunteerItem_id) # 직접 volunteeritem 객체 배열에 넣어주기
+                    if participate_item:
+                        grant = ParticipateItems.objects.filter(volunteerItem_id = participate_item.first().id).first().grant # 해당 봉사의 승인 여부
+                        print(grant)
+                        participate_list.append([participate_item, grant])
+                    continue
 
         feed_list = Feed.objects.filter(email=email)
         like_list = list(Like.objects.filter(email=email, is_like=True).values_list('feed_id', flat=True))
@@ -410,5 +414,12 @@ class Follow(APIView):
 
         return render(request, "content/test.html", context=dict(mainuser=mainuser))
 
+
+
+def detail(request, feed_id):
+    feed = get_object_or_404(Feed, pk = feed_id)
+    user = User.objects.filter(email=feed.email).first()
+    context = {"feed": feed, "nickname": user.nickname, "profile_image" : user.profile_image}
+    return render(request, "content/feed_detail.html", context)
 
         
