@@ -129,32 +129,32 @@ crossorigin="anonymous"></script>
 <!--<div>봉사 신청 받은 내역</div>-->  
 <!--<div>
     {% for outitem in participate_list%}
-        {% for user in outitem.1%}
             {%if outitem.2 == False %}
                 <div>{{outitem.0.title}}</div>
                 <button id="grant">승인</button>
-                <input id="user" value={{user.id}}></input>
+                <input id="user" value={{outitem.1.id}}></input>
                 <input id="item" value={{outitem.0.id}}></input>
                 <input id="admit_time" value={{outitem.0.admit_time}}></input>
             {%endif%}
-        {%endfor%}
     {%endfor%}
 </div>
 {%endif%}-->
 
 <div style="border-top: solid 2px rgba(50,50,50,0.1); width: 100%"> 
     <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; margin: 20px">
+        {%if mainuser.ranking == 'Seed'%}
         <div id="rank" style="cursor: pointer;margin: 0 30px;display: flex; flex-direction: row;align-items: center"><span class="material-icons-outlined">filter_vintage</span></div>
-        {%if granted_user.ranking == 'Sprout'%}
+        {%endif%}
+        {%if mainuser.ranking == 'Sprout'%}
             <div id="rank" style="cursor: pointer;margin: 0 30px;display: flex; flex-direction: row;align-items: center"><span class="material-icons-outlined">filter_vintage</span><span class="material-icons-outlined">filter_vintage</span></div>
         {%endif%}
-        {%if granted_user.ranking == 'Seedling'%}
+        {%if mainuser.ranking == 'Seedling'%}
             <div id="rank" style="cursor: pointer;margin: 0 30px;display: flex; flex-direction: row;align-items: center"><span class="material-icons-outlined">filter_vintage</span><span class="material-icons-outlined">filter_vintage</span></div><span class="material-icons-outlined">filter_vintage</span>
         {%endif%}
-        {%if granted_user.ranking == 'Tree'%}
+        {%if mainuser.ranking == 'Tree'%}
             <div id="rank" style="cursor: pointer;margin: 0 30px;display: flex; flex-direction: row;align-items: center"><span class="material-icons-outlined">filter_vintage</span><span class="material-icons-outlined">filter_vintage</span><span class="material-icons-outlined">filter_vintage</span><span class="material-icons-outlined">filter_vintage</span></div>
         {%endif%}
-        {%if granted_user.ranking == 'Flower'%}
+        {%if mainuser.ranking == 'Flower'%}
             <div id="rank" style="cursor: pointer;margin: 0 30px;display: flex; flex-direction: row;align-items: center"><span class="material-icons-outlined">filter_vintage</span><span class="material-icons-outlined">filter_vintage</span><span class="material-icons-outlined">filter_vintage</span><span class="material-icons-outlined">filter_vintage</span><span class="material-icons-outlined">filter_vintage</span></div>
         {%endif%}
 
@@ -242,15 +242,13 @@ crossorigin="anonymous"></script>
         <!--<div>봉사 신청 받은 내역</div>-->
         <div>
             {% for outitem in participate_list%}
-                {% for user in outitem.1%}
-                    {%if outitem.2 == False %}
-                        <div>{{outitem.0.title}}</div>
-                        <button id="grant">승인</button>
-                        <input id="user" value={{user.id}}></input>
-                        <input id="item" value={{outitem.0.id}}></input>
-                        <input id="admit_time" value={{outitem.0.admit_time}}></input>
-                    {%endif%}
-                {%endfor%}
+                {%if outitem.2 == False %}
+                    <div>{{outitem.0.title}}</div>
+                    <button id="grant">승인</button>
+                    <input id="user" value={{outitem.1.id}}></input>
+                    <input id="item" value={{outitem.0.id}}></input>
+                    <input id="admit_time" value={{outitem.0.admit_time}}></input>
+                {%endif%}
             {%endfor%}
         </div>
         {%endif%}

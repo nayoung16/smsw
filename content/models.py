@@ -45,5 +45,5 @@ class VolunteerItem(models.Model):
 
 class ParticipateItems(models.Model):
     grant = models.BooleanField(default=False)
-    volunteerItem = models.OneToOneField(VolunteerItem, on_delete=models.CASCADE)
+    volunteerItem = models.ForeignKey(VolunteerItem, on_delete=models.CASCADE)
     user = models.OneToOneField(User, on_delete=models.CASCADE)

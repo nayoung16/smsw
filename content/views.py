@@ -105,6 +105,9 @@ class NotParticipate(APIView):
 
         volunteer_id = request.data.get('volunteer_id')
         participated_item = VolunteerItem.objects.filter(id=volunteer_id).first()
+        print(participated_item.participant)
+        participated_item.participant = participated_item.participant + 1
+        participated_item.save()
 
         remove_item = ParticipateItems.objects.filter(Q(user_id = mainuser.id) & Q(volunteerItem_id = participated_item.id))
         remove_item.delete()
@@ -160,13 +163,12 @@ class Profile(APIView):
             created_list = VolunteerItem.objects.filter(admin=mainuser).all()
             for item in created_list: # 봉사 기관자가 생성한 voluteeritem에 대해서
                 participated_created_list = ParticipateItems.objects.filter(volunteerItem_id = item.id).all() # 신청된 것들 선발
-                if participated_created_list : #만약 신청 받은 것이 있다면
+                if participated_created_list: #만약 신청 받은 것이 있다면
                     for participated_item in participated_created_list:
-
                         user = User.objects.filter(id = participated_item.user_id).first()
-                        participated_user_list.append(user) # 신청 받은 각각의 봉사 item에 대한 user들 리스트에 넣기
                         isgranted = participated_item.grant
-                    participate_list.append([item, participated_user_list, isgranted])
+                        participate_list.append([item, user, isgranted])
+                    print(participate_list)
         else:
             participated_list =[]
             participated_list.append(ParticipateItems.objects.filter(user_id = mainuser.id).all()) # 현재 유저가 신청한 volunteeritem들
@@ -210,10 +212,13 @@ class Profile(APIView):
 
         granted_user.save()
 
-
         granted_item = ParticipateItems.objects.filter(volunteerItem_id=item).first()
         granted_item.grant = 1
         granted_item.save()
+
+        remove_item = ParticipateItems.objects.filter(Q(user_id = user) & Q(volunteerItem_id = item))
+        remove_item.delete()
+
 
         return Response(status=200)
 
@@ -255,6 +260,7 @@ class ToggleBookmark(APIView):
     def post(self, request):
         volunteer_id = request.data.get('volunteer_id', None)
         bookmark_text = request.data.get('bookmark_text', True)
+        print(volunteer_id)
         print(bookmark_text)
         if bookmark_text == 'bookmark_border':
             is_marked = True
@@ -300,17 +306,37 @@ class Search(APIView):
         for d in distance:
             query = VolunteerItem.objects.filter(Q(lat = d[1]) & Q(lng = d[2])).distinct()
             volunteer_list.append(query)
+        
+        bookmark_volunteer_list=[]
+        for set_item in volunteer_list:
+            for item in set_item:
+                print(item)
+                is_marked=Bookmark.objects.filter(feed_id=item.id, email=email, is_marked=True).exists()
+                bookmark_item = []
+                bookmark_item.append([item, is_marked])
+                bookmark_volunteer_list.append(bookmark_item)
 
         return render(request, "content/search.html", context=dict(mainuser=mainuser,
-                                                                    volunteer_list = volunteer_list[:]))     
+                                                                    volunteer_list = volunteer_list[:],
+                                                                    bookmark_volunteer_list= bookmark_volunteer_list[:]))     
 
 class SearchResult(APIView):
     def get(self, request):
         email = request.session.get('email', None)
         mainuser = User.objects.filter(email=email).first()
         volunteer_list = config.volunteer_list
+
+
+        bookmark_volunteer_list=[]
+        for item in volunteer_list:
+            print(item)
+            is_marked=Bookmark.objects.filter(feed_id=item.id, email=email, is_marked=True).exists()
+            bookmark_item = []
+            bookmark_item.append([item, is_marked])
+            bookmark_volunteer_list.append(bookmark_item)
+
         return render(request, "content/search.html", context=dict(mainuser=mainuser,
-                                                                    volunteer_list=[volunteer_list]))   
+                                                                    bookmark_volunteer_list=bookmark_volunteer_list))   
     def post(self, request):
         email = request.session.get('email', None)
         mainuser = User.objects.filter(email=email).first()
@@ -320,10 +346,19 @@ class SearchResult(APIView):
             Q(description__contains=search_item) | 
             Q(title__contains=search_item)
         ).distinct()
-        print(search_item)
         config.volunteer_list = volunteer_list
+        print(volunteer_list)
+
+        bookmark_volunteer_list=[]
+        for item in volunteer_list:
+            print(item)
+            is_marked=Bookmark.objects.filter(feed_id=item.id, email=email, is_marked=True).exists()
+            bookmark_item = []
+            bookmark_item.append([item, is_marked])
+            bookmark_volunteer_list.append(bookmark_item)
+
         return render(request, "content/search.html", context=dict(mainuser=mainuser,
-                                                                    volunteer_list=[volunteer_list]))
+                                                                    bookmark_volunteer_list=bookmark_volunteer_list))
 
 class createVolunteerITem(APIView):
     def get(self, request):
@@ -418,10 +453,16 @@ class Follow(APIView):
 
 
 
-def detail(request, feed_id):
+def feed_detail(request, feed_id):
     feed = get_object_or_404(Feed, pk = feed_id)
     user = User.objects.filter(email=feed.email).first()
     context = {"feed": feed, "nickname": user.nickname, "profile_image" : user.profile_image}
     return render(request, "content/feed_detail.html", context)
+
+def volunteer_detail(request, feed_id):
+    volunteeritem = get_object_or_404(VolunteerItem, pk = feed_id)
+    user = User.objects.filter(email=volunteeritem.admin.email).first()
+    context = {"volunteeritem": volunteeritem, "nickname": user.nickname, "profile_image" : user.profile_image}
+    return render(request, "content/volunteer_detail.html", context)
 
         

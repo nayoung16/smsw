@@ -29,10 +29,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
 -->
 </head>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="position: fixed;width: 100%; display:block; z-index:10;">
-    <div class="container-fluid" style="justify-content: space-between;flex-wrap: nowrap; min-width: 1000px;">
-        <a class="navbar-brand" href={% url "content:main"%}><img style="width: 100px"
-                                                src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png">
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="position: fixed;width: 100%; z-index:10;">
+    <div class="container-fluid" style="justify-content: space-between;flex-wrap: nowrap; min-width: 1000px">
+        <a class="navbar-brand" href={% url "content:community"%}>
+            <img style="width: 100px"
+            src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png">
         </a>
         <div style="display: flex">
             <a href={% url "content:community"%} style="color: black">커뮤니티</a>
@@ -45,9 +46,9 @@
             {%endif%}
             <span id="nav_bar_add_box" class="material-icons-outlined" style="padding-right: 10px">add_box</span>
             &nbsp;  &nbsp;  &nbsp; 
+            
             <div class="dropdown">
-                <a href="#" role="button" id="dropdownMenuLink"
-                data-bs-toggle="dropdown" aria-expanded="false">
+                <a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="box" style="width: 40px; height: 40px">
                         <img class="profile"
                             src="{% get_media_prefix %}{{ mainuser.profile_image }}">
@@ -65,6 +66,8 @@
         </div>
     </div>
 </nav>
+
+
 <body style="background-color : #B0FDB3;">
     <div style="width:100%; height: 200px; background-color:#B0FDB3;padding:200px;">
         <div class="searchBar">
@@ -81,22 +84,22 @@
             <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
           </svg>검색 결과</div><br>
    <div class="flex_container">
-    {%if volunteer_list%}
-        {%for item in volunteer_list%}
-            {% for a in item %}
-            <div class="flex_item" style="width:150px; height:150px; margin: 20px; background-color:white;">
-                <div>지역 : {{a.region}}</div>
-                <div>내용 : {{a.description}}</div>
-                <!--<span id="detail_button" class="material-icons-outlined">add_box</span>-->
-                <span id="bookmark_{{ volunteer.id }}" volunteer_id="{{ volunteer.id }}" class="bookmark material-icons-outlined" style="cursor: pointer">
-                    {% if volunteer.is_marked %}
-                    bookmark
-                    {% else %}
-                    bookmark_border
-                    {% endif %}
-                </span>
-            </div>
-            {% endfor %}
+    {%if bookmark_volunteer_list%}
+        {%for item in bookmark_volunteer_list%}
+            {%for a in item%}
+                <div class="flex_item" style="width:150px; height:150px; margin: 20px; background-color:white;">
+                    <div>지역 : {{a.0.region}}</div>
+                    <div>내용 : {{a.0.description}}</div>
+                    <!--<span id="detail_button" class="material-icons-outlined">add_box</span>-->
+                    <span id="bookmark_{{ a.0.id }}" volunteer_id="{{ a.0.id }}" class="bookmark material-icons-outlined" style="cursor: pointer">
+                        {% if a.1 %}
+                        bookmark
+                        {% else %}
+                        bookmark_border
+                        {% endif %}
+                    </span>
+                </div>
+            {%endfor%}
         {% endfor %}
     {%endif%}
             
@@ -123,6 +126,61 @@
         </div>
     </div>
 -->
+
+ <!-- 첫번째 모달 -->
+ <div id="first_modal" class="modal_overlay">
+    <div class="modal_window">
+        <div style="display: flex; flex-direction: row; justify-content: space-between">
+            <div style="width: 40px; background: gray">
+
+            </div>
+            <div>
+                새 이미지 업로드
+            </div>
+            <div style="width: 40px; background: gray">
+                <span class="modal_close material-icons-outlined">close</span>
+            </div>
+        </div>
+
+        <div class="img_upload_space" style="border-top: solid 1px gray;width: 778px; height: 540px;margin-top: 10px">
+
+        </div>
+    </div>
+</div>
+
+<!-- 두번째 모달 -->
+<div id="second_modal" class="modal_overlay">
+    <div class="modal_window">
+        <div style="display: flex; flex-direction: row; justify-content: space-between">
+            <div style="width: 40px; background: gray">
+
+            </div>
+            <div>
+                새 이미지 업로드
+            </div>
+            <div style="width: 40px; background: gray">
+                <span class="modal_close material-icons-outlined">close</span>
+            </div>
+        </div>
+
+        <div style="border-top: solid 1px gray;display: flex; flex-direction: row;margin-top: 10px">
+            <div class="img_upload_space" style="width: 500px; height: 540px;">
+
+            </div>
+            <div style="border-left: solid 1px gray">
+                <div>
+                    <textarea id="input_feed_content" class="form-control" style="width: 276px; height: 400px"
+                              id="exampleFormControlTextarea1" rows="5"></textarea>
+                </div>
+                <button id="feed_create_button" type="button" class="btn btn-primary" style="width: 100%">
+                    공유하기
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
 </body>
 </html>
 
@@ -178,11 +236,114 @@ $('#detail_button').click(function () {
 
 });
 
+
+$('#nav_bar_add_box').click(function () {
+    $('#first_modal').css({
+        display: 'flex'
+    });
+
+    $(document.body).css({
+        overflow: 'hidden'
+    });
+
+})
+
 $(".modal_close").click(function () {
-    $('#detail_modal').css({
+    $('#first_modal').css({
+        display: 'none'
+    });
+    $('#second_modal').css({
         display: 'none'
     });
 });
+
+$('#feed_create_button').click(function () {
+    alert("공유하기 눌렀다.");
+
+    let file = files[0];
+    let image = files[0].name;
+    let content = $('#input_feed_content').val();
+
+    let fd = new FormData();
+
+    fd.append('file', file);
+    fd.append('image', image);
+    fd.append('content', content);
+
+    $.ajax({
+        url: "/main/upload_feed",
+        data: fd,
+        method: "POST",
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            alert("성공");
+        },
+        error: function (request, status, error) {
+            alert("에러");
+        },
+        complete: function () {
+            alert("완료");
+            location.replace("/main/community");
+        }
+    });
+});
+
+$('.img_upload_space')
+    .on("dragover", dragOver)
+    .on("dragleave", dragOver)
+    .on("drop", uploadFiles);
+
+function dragOver(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (e.type == "dragover") {
+        $(e.target).css({
+            "background-color": "black",
+            "outline-offset": "-20px"
+        });
+    } else {
+        $(e.target).css({
+            "outline-offset": "-10px"
+        });
+    }
+}
+
+function uploadFiles(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    e.dataTransfer = e.originalEvent.dataTransfer; //2
+    files = e.target.files || e.dataTransfer.files;
+    console.log("뭔가 파일을 올렸네??" + files[0].name);
+    if (files.length > 1) {
+        alert('하나만 올려라.');
+        return;
+    }
+
+    if (files[0].type.match(/image.*/)) {
+
+        $('#first_modal').css({
+            display: 'none'
+        });
+        $('#second_modal').css({
+            display: 'flex'
+        });
+
+        $('.img_upload_space').css({
+            "background-image": "url(" + window.URL.createObjectURL(files[0]) + ")",
+            "outline": "none",
+            "background-size": "100%",
+            "background-repeat": "no-repeat",
+            "background-position": "center"
+        });
+    } else {
+        alert('이미지가 아닙니다.');
+        return;
+    }
+
+}
 
 $(".bookmark").click(function (event) {
     let volunteer_id = event.target.attributes.getNamedItem('volunteer_id').value;
